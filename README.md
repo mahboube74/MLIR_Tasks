@@ -38,8 +38,7 @@ task 5:
     cd build
     cmake ..
     cmake --build . --target VecVecTool --clean-first
-
-    
+   
 Output is VecVecTool: This executable is your compiled MLIR tool which is now ready to process MLIR files.
 2.  Run the Tool on example.mlir
 

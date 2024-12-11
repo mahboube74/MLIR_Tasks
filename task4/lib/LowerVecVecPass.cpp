@@ -9,7 +9,7 @@ namespace {
 struct LowerVecVecPass : public PassWrapper<LowerVecVecPass, OperationPass<func::FuncOp>> {
     void runOnOperation() override {
         auto func = llvm::dyn_cast<func::FuncOp>(getOperation());
-        if (!func) return; // اطمینان از اینکه عملیات صحیح است
+        if (!func) return; 
         
         OpBuilder builder(func.getContext());
 
@@ -17,7 +17,7 @@ struct LowerVecVecPass : public PassWrapper<LowerVecVecPass, OperationPass<func:
             if (auto dotOp = dyn_cast<arith::MulFOp>(op)) {
                 builder.setInsertionPoint(dotOp);
                 auto newOp = builder.create<arith::MulFOp>(dotOp.getLoc(), dotOp.getLhs(), dotOp.getRhs());
-                dotOp.replaceAllUsesWith(newOp.getResult()); // اصلاح شده
+                dotOp.replaceAllUsesWith(newOp.getResult()); 
                 dotOp.erase();
             }
         });

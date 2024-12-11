@@ -28,7 +28,9 @@ Task 4:  focuses on implementing a custom MLIR dialect and operation (vec.myop) 
     cmake -S . -B build
     cmake --build build
   2. Testing with Input:
+     
     ./VecVecOp test/example.mlir
+    
 
 
 

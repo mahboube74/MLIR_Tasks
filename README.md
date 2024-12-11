@@ -47,11 +47,11 @@ Output is VecVecTool: This executable is your compiled MLIR tool which is now re
 3. Generate LLVM IR from the Lowered MLIR
     
     mlir-translate --mlir-to-llvmir lowered_output.mlir -o final_output.ll
-   
+    
 5.  Compile the LLVM IR to an Executable
 
     clang final_output.ll -o vecvec_executable
     ./vecvec_executable
-
+    
 it will execute the compiled code based on the LLVM IR.
 

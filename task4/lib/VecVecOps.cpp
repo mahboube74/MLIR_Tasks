@@ -7,7 +7,7 @@ using namespace mlir::vec;
 
 void MyOp::build(OpBuilder &builder, OperationState &state, Value lhs, Value rhs) {
   state.addOperands({lhs, rhs});
-  state.addTypes(builder.getF32Type()); // نتیجه اسکالر است (float)
+  state.addTypes(builder.getF32Type()); 
 }
 
 LogicalResult MyOp::verify() {

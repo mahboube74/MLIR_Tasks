@@ -1,0 +1,5 @@
+func @vecvec_example(%vec1: vector<4xf32>, %vec2: vector<4xf32>) -> f32 {
+  %mul_result = arith.mulf %vec1, %vec2 : vector<4xf32>
+  %sum_result = vector.reduce_add %mul_result : vector<4xf32> to f32
+  return %sum_result : f32
+}

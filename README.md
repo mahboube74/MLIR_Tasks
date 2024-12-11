@@ -22,7 +22,14 @@ Task 4:  focuses on implementing a custom MLIR dialect and operation (vec.myop) 
 2. Create the Dialect (VecVecDialect in VecVecDialect.h and VecVecDialect.cpp)
 3. Implement a Lowering Pass (LowerVecVecPass.cpp)
 4. Create an Input MLIR File (test/example.mlir)
-5. Transformed MLIR File: The lowering pass converts vec.myop into standard MLIR operations. 
+5. Transformed MLIR File: The lowering pass converts vec.myop into standard MLIR operations.
+  1. Use CMake to build the project:
+
+    cmake -S . -B build
+    cmake --build build
+  2. Testing with Input:
+    ./VecVecOp test/example.mlir
+
 
 
 

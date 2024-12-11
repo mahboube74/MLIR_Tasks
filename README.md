@@ -33,9 +33,12 @@ Task 4:  focuses on implementing a custom MLIR dialect and operation (vec.myop) 
 
 task 5: 
 1. Create a Build Directory and Build the Project:
+
+    mkdir build
+
    
      
-    mkdir build
+    
    cd build
    cmake ..
    cmake --build . --target VecVecTool --clean-first

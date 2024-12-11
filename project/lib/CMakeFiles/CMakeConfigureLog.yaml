@@ -1,0 +1,290 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      The system is: Darwin - 22.6.0 - x86_64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: /usr/local/opt/llvm/bin/clang++ 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      ld: library 'c++' not found
+      clang++: error: linker command failed with exit code 1 (use -v to see invocation)
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/local/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/local/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /usr/local/opt/llvm/bin/clang++ 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
+      
+      The CXX compiler identification is Clang, found in:
+        /Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/3.31.2/CompilerIdCXX/CMakeCXXCompilerId.o
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/usr/local/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-VQ9N86"
+      binary: "/Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-VQ9N86"
+    cmakeVariables:
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "/usr/local/Cellar/llvm/19.1.4/bin/clang-scan-deps"
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_EXE_LINKER_FLAGS: "-L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "13.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-VQ9N86'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_0d600/fast
+        /Applications/Xcode.app/Contents/Developer/usr/bin/make  -f CMakeFiles/cmTC_0d600.dir/build.make CMakeFiles/cmTC_0d600.dir/build
+        Building CXX object CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o
+        /usr/local/opt/llvm/bin/clang++   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.7   -v -Wl,-v -MD -MT CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+        Homebrew clang version 19.1.4
+        Target: x86_64-apple-darwin22.6.0
+        Thread model: posix
+        InstalledDir: /usr/local/Cellar/llvm/19.1.4/bin
+        Configuration file: /usr/local/etc/clang/x86_64-apple-darwin22.cfg
+        System configuration file directory: /usr/local/etc/clang
+        User configuration file directory: /Users/mahboubemahdavi/.config/clang
+        clang++: warning: -Wl,-v: 'linker' input unused [-Wunused-command-line-argument]
+         (in-process)
+         "/usr/local/Cellar/llvm/19.1.4/bin/clang-19" -cc1 -triple x86_64-apple-macosx13.7.0 -Wundef-prefix=TARGET_OS_ -Werror=undef-prefix -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=all -ffp-contract=on -fno-rounding-math -funwind-tables=2 -target-sdk-version=14.2 -fcompatibility-qualified-id-block-type-checking -fvisibility-inlines-hidden-static-local-var -fbuiltin-headers-in-system-modules -fdefine-target-os-macros -target-cpu penryn -tune-cpu generic -debugger-tuning=lldb -fdebug-compilation-dir=/Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-VQ9N86 -target-linker-version 556.6 -v -fcoverage-compilation-dir=/Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-VQ9N86 -resource-dir /usr/local/Cellar/llvm/19.1.4/lib/clang/19 -dependency-file CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o.d -MT CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -internal-isystem /usr/local/Cellar/llvm/19.1.4/bin/../include/c++/v1 -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/local/include -internal-isystem /usr/local/Cellar/llvm/19.1.4/lib/clang/19/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/include -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o -x c++ /usr/local/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+        clang -cc1 version 19.1.4 based upon LLVM 19.1.4 default target x86_64-apple-darwin22.6.0
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/local/include"
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/Library/Frameworks"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/local/Cellar/llvm/19.1.4/bin/../include/c++/v1
+         /usr/local/Cellar/llvm/19.1.4/lib/clang/19/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks (framework directory)
+        End of search list.
+        Linking CXX executable cmTC_0d600
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0d600.dir/link.txt --verbose=1
+        Homebrew clang version 19.1.4
+        Target: x86_64-apple-darwin22.6.0
+        Thread model: posix
+        InstalledDir: /usr/local/Cellar/llvm/19.1.4/bin
+        Configuration file: /usr/local/etc/clang/x86_64-apple-darwin22.cfg
+        System configuration file directory: /usr/local/etc/clang
+        User configuration file directory: /Users/mahboubemahdavi/.config/clang
+         "/usr/bin/ld" -demangle -lto_library /usr/local/Cellar/llvm/19.1.4/lib/libLTO.dylib -dynamic -arch x86_64 -platform_version macos 13.7.0 14.2 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_0d600 -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /usr/local/Cellar/llvm/19.1.4/lib/clang/19/lib/darwin/libclang_rt.osx.a
+        @(#)PROGRAM:ld  PROJECT:dyld-1022.1
+        BUILD 05:26:33 Dec  7 2023
+        configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h
+        will use ld-classic for: armv6 armv7 armv7s arm64_32 i386 armv6m armv7k armv7m armv7em
+        LTO support using: LLVM version 19.1.4 (static support for 29, runtime is 29)
+        TAPI support using: Apple TAPI version 15.0.0 (tapi-1500.0.12.8)
+        Library search paths:
+        	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib
+        Framework search paths:
+        /usr/local/opt/llvm/bin/clang++  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.7 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib -v -Wl,-v CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_0d600
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:113 (message)"
+      - "/usr/local/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Effective list of requested architectures (possibly empty)  : ""
+      Effective list of architectures found in the ABI info binary: "x86_64"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/usr/local/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/local/Cellar/llvm/19.1.4/bin/../include/c++/v1]
+          add: [/usr/local/Cellar/llvm/19.1.4/lib/clang/19/include]
+          add: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/include]
+        end of search list found
+        collapse include dir [/usr/local/Cellar/llvm/19.1.4/bin/../include/c++/v1] ==> [/usr/local/Cellar/llvm/19.1.4/include/c++/v1]
+        collapse include dir [/usr/local/Cellar/llvm/19.1.4/lib/clang/19/include] ==> [/usr/local/Cellar/llvm/19.1.4/lib/clang/19/include]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/include] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/include]
+        implicit include dirs: [/usr/local/Cellar/llvm/19.1.4/include/c++/v1;/usr/local/Cellar/llvm/19.1.4/lib/clang/19/include;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/usr/local/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-VQ9N86']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_0d600/fast]
+        ignore line: [/Applications/Xcode.app/Contents/Developer/usr/bin/make  -f CMakeFiles/cmTC_0d600.dir/build.make CMakeFiles/cmTC_0d600.dir/build]
+        ignore line: [Building CXX object CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/usr/local/opt/llvm/bin/clang++   -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.7   -v -Wl -v -MD -MT CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o -c /usr/local/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Homebrew clang version 19.1.4]
+        ignore line: [Target: x86_64-apple-darwin22.6.0]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /usr/local/Cellar/llvm/19.1.4/bin]
+        ignore line: [Configuration file: /usr/local/etc/clang/x86_64-apple-darwin22.cfg]
+        ignore line: [System configuration file directory: /usr/local/etc/clang]
+        ignore line: [User configuration file directory: /Users/mahboubemahdavi/.config/clang]
+        ignore line: [clang++: warning: -Wl -v: 'linker' input unused [-Wunused-command-line-argument]]
+        ignore line: [ (in-process)]
+        ignore line: [ "/usr/local/Cellar/llvm/19.1.4/bin/clang-19" -cc1 -triple x86_64-apple-macosx13.7.0 -Wundef-prefix=TARGET_OS_ -Werror=undef-prefix -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=all -ffp-contract=on -fno-rounding-math -funwind-tables=2 -target-sdk-version=14.2 -fcompatibility-qualified-id-block-type-checking -fvisibility-inlines-hidden-static-local-var -fbuiltin-headers-in-system-modules -fdefine-target-os-macros -target-cpu penryn -tune-cpu generic -debugger-tuning=lldb -fdebug-compilation-dir=/Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-VQ9N86 -target-linker-version 556.6 -v -fcoverage-compilation-dir=/Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-VQ9N86 -resource-dir /usr/local/Cellar/llvm/19.1.4/lib/clang/19 -dependency-file CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o.d -MT CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -internal-isystem /usr/local/Cellar/llvm/19.1.4/bin/../include/c++/v1 -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/local/include -internal-isystem /usr/local/Cellar/llvm/19.1.4/lib/clang/19/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/include -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o -x c++ /usr/local/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [clang -cc1 version 19.1.4 based upon LLVM 19.1.4 default target x86_64-apple-darwin22.6.0]
+        ignore line: [ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/local/include"]
+        ignore line: [ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/Library/Frameworks"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/local/Cellar/llvm/19.1.4/bin/../include/c++/v1]
+        ignore line: [ /usr/local/Cellar/llvm/19.1.4/lib/clang/19/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/System/Library/Frameworks (framework directory)]
+        ignore line: [End of search list.]
+        ignore line: [Linking CXX executable cmTC_0d600]
+        ignore line: [/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0d600.dir/link.txt --verbose=1]
+        ignore line: [Homebrew clang version 19.1.4]
+        ignore line: [Target: x86_64-apple-darwin22.6.0]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /usr/local/Cellar/llvm/19.1.4/bin]
+        ignore line: [Configuration file: /usr/local/etc/clang/x86_64-apple-darwin22.cfg]
+        ignore line: [System configuration file directory: /usr/local/etc/clang]
+        ignore line: [User configuration file directory: /Users/mahboubemahdavi/.config/clang]
+        link line: [ "/usr/bin/ld" -demangle -lto_library /usr/local/Cellar/llvm/19.1.4/lib/libLTO.dylib -dynamic -arch x86_64 -platform_version macos 13.7.0 14.2 -syslibroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_0d600 -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /usr/local/Cellar/llvm/19.1.4/lib/clang/19/lib/darwin/libclang_rt.osx.a]
+          arg [/usr/bin/ld] ==> ignore
+          arg [-demangle] ==> ignore
+          arg [-lto_library] ==> ignore, skip following value
+          arg [/usr/local/Cellar/llvm/19.1.4/lib/libLTO.dylib] ==> skip value of -lto_library
+          arg [-dynamic] ==> ignore
+          arg [-arch] ==> ignore
+          arg [x86_64] ==> ignore
+          arg [-platform_version] ==> ignore
+          arg [macos] ==> ignore
+          arg [13.7.0] ==> ignore
+          arg [14.2] ==> ignore
+          arg [-syslibroot] ==> ignore
+          arg [/Library/Developer/CommandLineTools/SDKs/MacOSX13.sdk] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-enable-linkonceodr-outlining] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_0d600] ==> ignore
+          arg [-L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib] ==> dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib]
+          arg [-search_paths_first] ==> ignore
+          arg [-headerpad_max_install_names] ==> ignore
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_0d600.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [-lc++] ==> lib [c++]
+          arg [-lSystem] ==> lib [System]
+          arg [/usr/local/Cellar/llvm/19.1.4/lib/clang/19/lib/darwin/libclang_rt.osx.a] ==> lib [/usr/local/Cellar/llvm/19.1.4/lib/clang/19/lib/darwin/libclang_rt.osx.a]
+        linker tool for 'CXX': /usr/bin/ld
+        Library search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib]
+        remove lib [System]
+        remove lib [/usr/local/Cellar/llvm/19.1.4/lib/clang/19/lib/darwin/libclang_rt.osx.a]
+        collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib]
+        collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib]
+        implicit libs: [c++]
+        implicit objs: []
+        implicit dirs: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/local/share/cmake/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "/usr/local/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "/usr/local/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      Running the CXX compiler's linker: "/usr/bin/ld" "-v"
+      @(#)PROGRAM:ld  PROJECT:dyld-1022.1
+      BUILD 05:26:33 Dec  7 2023
+      configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h
+      will use ld-classic for: armv6 armv7 armv7s arm64_32 i386 armv6m armv7k armv7m armv7em
+      LTO support using: LLVM version 15.0.0 (static support for 29, runtime is 29)
+      TAPI support using: Apple TAPI version 15.0.0 (tapi-1500.0.12.8)
+      Library search paths:
+      Framework search paths:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/local/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/local/share/cmake/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "/usr/local/opt/llvm/lib/cmake/llvm/FindFFI.cmake:62 (check_cxx_source_compiles)"
+      - "/usr/local/opt/llvm/lib/cmake/llvm/LLVMConfig.cmake:258 (find_package)"
+      - "CMakeLists.txt:14 (find_package)"
+    checks:
+      - "Performing Test HAVE_FFI_CALL"
+    directories:
+      source: "/Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-2nYqpB"
+      binary: "/Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-2nYqpB"
+    cmakeVariables:
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "/usr/local/Cellar/llvm/19.1.4/bin/clang-scan-deps"
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: "-L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib"
+      CMAKE_MODULE_PATH: "/usr/local/opt/llvm/lib/cmake/llvm"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: "13.7"
+      CMAKE_OSX_SYSROOT: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk"
+    buildResult:
+      variable: "HAVE_FFI_CALL"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-2nYqpB'
+        
+        Run Build Command(s): /usr/local/bin/cmake -E env VERBOSE=1 /usr/bin/make -f Makefile cmTC_f871c/fast
+        /Applications/Xcode.app/Contents/Developer/usr/bin/make  -f CMakeFiles/cmTC_f871c.dir/build.make CMakeFiles/cmTC_f871c.dir/build
+        Building CXX object CMakeFiles/cmTC_f871c.dir/src.cxx.o
+        /usr/local/opt/llvm/bin/clang++ -DHAVE_FFI_CALL  -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.7 -MD -MT CMakeFiles/cmTC_f871c.dir/src.cxx.o -MF CMakeFiles/cmTC_f871c.dir/src.cxx.o.d -o CMakeFiles/cmTC_f871c.dir/src.cxx.o -c /Users/mahboubemahdavi/Documents/compiler/iree/llvm-project/build/project/lib/CMakeFiles/CMakeScratch/TryCompile-2nYqpB/src.cxx
+        Linking CXX executable cmTC_f871c
+        /usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f871c.dir/link.txt --verbose=1
+        /usr/local/opt/llvm/bin/clang++  -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -mmacosx-version-min=13.7 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib  CMakeFiles/cmTC_f871c.dir/src.cxx.o -o cmTC_f871c  /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk/usr/lib/libffi.tbd
+        
+      exitCode: 0
+...

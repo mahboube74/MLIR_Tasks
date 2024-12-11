@@ -37,8 +37,8 @@ link_directories(/usr/local/Cellar/llvm/19.1.4/lib/c++)
 file(GLOB_RECURSE LIB_SOURCES lib/*.cpp)
 
 # Add the executable target
-add_executable(VecVecOp ${LIB_SOURCES})
-
+add_executable(VecVecOp ${LIB_SOURCES}) # for task 5 comment this
+#add_executable(VecVecTool tools/main.cpp) this is  for  task 5
 # Link libraries
 target_link_libraries(VecVecOp PRIVATE
   MLIRIR

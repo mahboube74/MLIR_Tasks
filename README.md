@@ -25,46 +25,151 @@ To generate the LLVM IR from the transformed Affine dialect code, we need to low
     
 Task 4:
 
-focuses on implementing a custom MLIR dialect and operation (vec.myop) to operate on 1D vectors. The task involves defining the operation, its associated dialect, and a lowering pass to transform the custom operation into standard MLIR operations. The overall goal is to produce a valid MLIR transformation pipeline for specific inputs.
-  1. Define the Operation (MyOp in VecVecOps.h and VecVecOps.cpp): This operation (vec.myop) is designed to take two 1D vectors as input and produce a scalar (f32) result, representing the dot product.  The build function specifies operand and result types, and the verify function checks input validity.
-  2. Create the Dialect (VecVecDialect in VecVecDialect.h and VecVecDialect.cpp)
-  3. Implement a Lowering Pass (LowerVecVecPass.cpp)
-  4. Create an Input MLIR File (test/example.mlir)
-  5. Transformed MLIR File: The lowering pass converts vec.myop into standard MLIR operations.
-  Use CMake to build the project:
+In this task, we added a custom operation (linalg.vecvec) to the Linalg dialect in MLIR. This operation computes the dot product of two vectors and produces a scalar result. 
 
-        cmake -S . -B build
-        cmake --build build
-     
-  Testing with Input:
-     
-    ./VecVecOp test/example.mlir
-    
+1. Modify LinalgStructuredOps.td
+We defined the new operation linalg.vecvec in the LinalgStructuredOps.td file. This file contains all structured operations in the Linalg dialect.
+
+```mlir
+def Linalg_VecVecOp : LinalgStructuredBase_Op<"vecvec", [
+    DeclareOpInterfaceMethods<OpAsmOpInterface>,
+    DestinationStyleOpInterface,
+    SingleBlockImplicitTerminator<"YieldOp">]> {
+
+  let summary = "Vector-vector multiplication operation";
+  let description = [{
+    Computes the dot product of two vectors and produces a scalar result.
+    Example:
+    ```
+    %result = linalg.vecvec
+        ins(%v1: tensor<4xf32>, %v2: tensor<4xf32>)
+        outs(%init: tensor<f32>)
+        (%in1: f32, %in2: f32) {
+          %prod = arith.mulf %in1, %in2: f32
+          linalg.yield %prod: f32
+        }
+    ```
+  }];
+
+  let arguments = (ins
+    Variadic<TensorOrMemref>:$inputs,
+    TensorOrMemref:$init
+  );
+  let results = (outs Variadic<AnyTensor>:$result);
+
+  let regions = (region SizedRegion<1>:$reducer);
+
+  let traits = [
+    SingleBlockImplicitTerminator<"YieldOp">,
+    DestinationStyleOpInterface
+  ];
+
+  let builders = [
+    OpBuilder<(ins "ValueRange":$inputs, "ValueRange":$inits,
+               "function_ref<void(OpBuilder &, Location, ValueRange)>":$bodyBuild,
+               CArg<"ArrayRef<NamedAttribute>", "{}">:$attributes)>
+  ];
+
+  let extraClassDeclaration = structuredOpsBaseDecls # [{
+    SmallVector<utils::IteratorType> getIteratorTypesArray() {
+      return {utils::IteratorType::parallel};
+    }
+
+    ArrayAttr getIndexingMaps() {
+      MLIRContext *context = getContext();
+      return ArrayAttr::get(context, {
+        AffineMapAttr::get(AffineMap::get(1, 0, getAffineDimExpr(0, context), context)),
+        AffineMapAttr::get(AffineMap::get(1, 0, getAffineDimExpr(0, context), context)),
+        AffineMapAttr::get(AffineMap::get(0, 0, {}, context))
+      });
+    }
+    MutableOperandRange getDpsInitsMutable() { return getInitMutable(); }
+  }];
+}
+```
+
+2. Update LinalgOps.cpp
+We implemented the builder function for VecVecOp in LinalgOps.cpp to handle operands, indexing maps, and iterator types.
+
+```cpp
+// Task 4
+void VecVecOp::build(OpBuilder &builder, OperationState &state,
+                     ValueRange inputs, ValueRange inits,
+                     function_ref<void(OpBuilder &, Location, ValueRange)> bodyBuild,
+                     ArrayRef<NamedAttribute> attributes) {
+  assert(inputs.size() == 2 && "Expected exactly two input vectors");
+  assert(inits.size() == 1 && "Expected exactly one init tensor");
+
+  // Add operands
+  state.addOperands(inputs);
+  state.addOperands(inits);
+
+  // Add result types
+  state.addTypes(inits[0].getType());
+
+  // Add attributes
+  state.addAttributes(attributes);
+  state.addAttribute(
+      "operandSegmentSizes",
+      builder.getDenseI32ArrayAttr({static_cast<int32_t>(inputs.size()),
+                                    static_cast<int32_t>(inits.size())}));
+
+  // Add indexing maps
+  auto context = builder.getContext();
+  state.addAttribute("indexing_maps",
+                     builder.getArrayAttr({
+                         AffineMapAttr::get(AffineMap::get(1, 0,
+                             getAffineDimExpr(0, context), context)),
+                         AffineMapAttr::get(AffineMap::get(1, 0,
+                             getAffineDimExpr(0, context), context)),
+                         AffineMapAttr::get(AffineMap::get(0, 0, {}, context)),
+                     }));
+
+  // Add iterator types
+  state.addAttribute("iterator_types",
+                     builder.getArrayAttr({builder.getStringAttr("parallel")}));
+
+  // Add a region
+  Region &region = *state.addRegion();
+  if (bodyBuild) {
+    OpBuilder::InsertionGuard guard(builder);
+    builder.createBlock(&region, {}, TypeRange(inputs[0].getType()));
+    builder.setInsertionPointToStart(&region.front());
+    bodyBuild(builder, state.location, region.front().getArguments());
+  }
+}
+```
+
+
+3. Register the Operation
+We registered the operation in the Linalg dialect by updating LinalgDialect.cpp:
+
+```cpp
+addOperations<
+    mlir::linalg::VecVecOp
+>();
+```
+
+4. Compile the Code
+   
+After implementing the custom operator, we recompiled the project:
+Here is the implementation:
+
+    cmake -G Ninja .. -DLLVM_ENABLE_PROJECTS=mlir
+    ninja
+
+
 
 task 5: 
 
-Firs, Create a Build Directory and Build the Project:
+To lower this code to LLVM IR, follow these steps:
+```bash
+mlir-opt --lower-affine vecvec_example.mlir -o affine_lowered.mlir
 
-    mkdir build
-    cd build
-    cmake ..
-    cmake --build . --target VecVecTool --clean-first
+mlir-opt --convert-linalg-to-loops \
+         --convert-linalg-to-llvm \
+         --convert-scf-to-cf \
+         --convert-memref-to-llvm \
+         affine_lowered.mlir -o llvm_lowered.mlir
 
- 
-Output is VecVecTool: This executable is your compiled MLIR tool which is now ready to process MLIR files.
-
-Second, run the Tool on example.mlir
-
-    ./VecVecTool ../test/example.mlir --lower-vecvec -o lowered_output.mlir
-
-Third, generate LLVM IR from the Lowered MLIR
-
-    mlir-translate --mlir-to-llvmir lowered_output.mlir -o final_output.ll
-       
-Forth, compile the LLVM IR to an Executable
-    
-    clang final_output.ll -o vecvec_executable
-    ./vecvec_executable
-
-it will execute the compiled code based on the LLVM IR.
-
+mlir-translate --mlir-to-llvmir llvm_lowered.mlir -o vecvec.ll

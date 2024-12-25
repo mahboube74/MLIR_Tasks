@@ -28,64 +28,54 @@ Task 4:
 In this task, we added a custom operation (linalg.vecvec) to the Linalg dialect in MLIR. This operation computes the dot product of two vectors and produces a scalar result. 
 
 1. Modify LinalgStructuredOps.td
-We defined the new operation linalg.vecvec in the LinalgStructuredOps.td file. This file contains all structured operations in the Linalg dialect.
+We defined the new operation linalg.vecvec in the LinalgOps.td file. This file contains all structured operations in the Linalg dialect.
 
 ```mlir
-def Linalg_VecVecOp : LinalgStructuredBase_Op<"vecvec", [
-    DeclareOpInterfaceMethods<OpAsmOpInterface>,
-    DestinationStyleOpInterface,
-    SingleBlockImplicitTerminator<"YieldOp">]> {
-
+def Linalg_VecVecOp : Linalg_Op<"vecvec",
+    [DestinationStyleOpInterface,
+     PredOpTrait<"input and output have same element type", TCopVTEtIsSameAs<0, 1>>,
+     DeclareOpInterfaceMethods<ReifyRankedShapedTypeOpInterface>,
+     DeclareOpInterfaceMethods<MemoryEffectsOpInterface>,
+     DeclareOpInterfaceMethods<TilingInterface,
+      ["getIterationDomain",
+       "getLoopIteratorTypes",
+       "getResultTilePosition",
+       "getTiledImplementation"]>]> {
   let summary = "Vector-vector multiplication operation";
   let description = [{
-    Computes the dot product of two vectors and produces a scalar result.
-    Example:
-    ```
-    %result = linalg.vecvec
-        ins(%v1: tensor<4xf32>, %v2: tensor<4xf32>)
-        outs(%init: tensor<f32>)
-        (%in1: f32, %in2: f32) {
-          %prod = arith.mulf %in1, %in2: f32
-          linalg.yield %prod: f32
-        }
-    ```
+    This operation performs vector-vector multiplication, resulting in a scalar output.
+    Specifically, given two vectors `v1` and `v2` of the same size, the operation computes:
+      `result = sum(v1[i] * v2[i]) for all i`.
   }];
 
-  let arguments = (ins
-    Variadic<TensorOrMemref>:$inputs,
-    TensorOrMemref:$init
-  );
-  let results = (outs Variadic<AnyTensor>:$result);
+  let arguments = (ins AnyRankedTensor:$vector1,
+                       AnyRankedTensor:$vector2,
+                       AnyRankedTensor:$output);
 
-  let regions = (region SizedRegion<1>:$reducer);
-
-  let traits = [
-    SingleBlockImplicitTerminator<"YieldOp">,
-    DestinationStyleOpInterface
-  ];
-
-  let builders = [
-    OpBuilder<(ins "ValueRange":$inputs, "ValueRange":$inits,
-               "function_ref<void(OpBuilder &, Location, ValueRange)>":$bodyBuild,
-               CArg<"ArrayRef<NamedAttribute>", "{}">:$attributes)>
-  ];
-
-  let extraClassDeclaration = structuredOpsBaseDecls # [{
-    SmallVector<utils::IteratorType> getIteratorTypesArray() {
-      return {utils::IteratorType::parallel};
-    }
-
-    ArrayAttr getIndexingMaps() {
-      MLIRContext *context = getContext();
-      return ArrayAttr::get(context, {
-        AffineMapAttr::get(AffineMap::get(1, 0, getAffineDimExpr(0, context), context)),
-        AffineMapAttr::get(AffineMap::get(1, 0, getAffineDimExpr(0, context), context)),
-        AffineMapAttr::get(AffineMap::get(0, 0, {}, context))
-      });
-    }
-    MutableOperandRange getDpsInitsMutable() { return getInitMutable(); }
+  let results = (outs Variadic<AnyRankedTensor>:$result);
+  let hasFolder = 1;
+  let assemblyFormat = [{
+    attr-dict
+    `ins` `(` $vector1 `:` type($vector1) `,` $vector2 `:` type($vector2) `)`
+    `outs` `(` $output `:` type($output) `)`
+    (`->` type($result)^)?
   }];
+
+  let extraClassDeclaration = [{
+    ShapedType getVector1OperandType() {
+      return cast<ShapedType>(getVector1().getType());
+    }
+    ShapedType getVector2OperandType() {
+      return cast<ShapedType>(getVector2().getType());
+    }
+    ShapedType getOutputOperandType() {
+      return cast<ShapedType>(getOutput().getType());
+    }
+    MutableOperandRange getDpsInitsMutable() { return getOutputMutable(); }
+  }];
+  let hasVerifier = 1;
 }
+
 ```
 
 2. Update LinalgOps.cpp
@@ -93,62 +83,108 @@ We implemented the builder function for VecVecOp in LinalgOps.cpp to handle oper
 
 ```cpp
 // Task 4
-void VecVecOp::build(OpBuilder &builder, OperationState &state,
-                     ValueRange inputs, ValueRange inits,
-                     function_ref<void(OpBuilder &, Location, ValueRange)> bodyBuild,
-                     ArrayRef<NamedAttribute> attributes) {
-  assert(inputs.size() == 2 && "Expected exactly two input vectors");
-  assert(inits.size() == 1 && "Expected exactly one init tensor");
+LogicalResult VecVecOp::verify() {
+    ShapedType vector1Type = getVector1OperandType();
+    ShapedType vector2Type = getVector2OperandType();
+    ShapedType outputType = getOutputOperandType();
 
-  // Add operands
-  state.addOperands(inputs);
-  state.addOperands(inits);
+    if (!vector1Type.hasRank() || !vector2Type.hasRank() || !outputType.hasRank())
+      return emitOpError("all operands must have ranked types");
 
-  // Add result types
-  state.addTypes(inits[0].getType());
+    if (vector1Type.getRank() != 1 || vector2Type.getRank() != 1)
+      return emitOpError("inputs must be 1D vectors");
 
-  // Add attributes
-  state.addAttributes(attributes);
-  state.addAttribute(
-      "operandSegmentSizes",
-      builder.getDenseI32ArrayAttr({static_cast<int32_t>(inputs.size()),
-                                    static_cast<int32_t>(inits.size())}));
+    if (vector1Type.getDimSize(0) != vector2Type.getDimSize(0))
+      return emitOpError("input vectors must have the same size");
 
-  // Add indexing maps
-  auto context = builder.getContext();
-  state.addAttribute("indexing_maps",
-                     builder.getArrayAttr({
-                         AffineMapAttr::get(AffineMap::get(1, 0,
-                             getAffineDimExpr(0, context), context)),
-                         AffineMapAttr::get(AffineMap::get(1, 0,
-                             getAffineDimExpr(0, context), context)),
-                         AffineMapAttr::get(AffineMap::get(0, 0, {}, context)),
-                     }));
+    if (outputType.getRank() != 0)
+      return emitOpError("output must be a scalar");
 
-  // Add iterator types
-  state.addAttribute("iterator_types",
-                     builder.getArrayAttr({builder.getStringAttr("parallel")}));
+    return success();
+  }
 
-  // Add a region
-  Region &region = *state.addRegion();
-  if (bodyBuild) {
-    OpBuilder::InsertionGuard guard(builder);
-    builder.createBlock(&region, {}, TypeRange(inputs[0].getType()));
-    builder.setInsertionPointToStart(&region.front());
-    bodyBuild(builder, state.location, region.front().getArguments());
+  SmallVector<Range> VecVecOp::getIterationDomain(OpBuilder &builder) {
+  Location loc = getLoc();
+  Value zero = builder.create<arith::ConstantIndexOp>(loc, 0);
+  Value one = builder.create<arith::ConstantIndexOp>(loc, 1);
+  Value vector1 = getVector1();
+  int64_t size = getVector1OperandType().getDimSize(0);
+
+  SmallVector<Range> loopBounds(1);
+  loopBounds[0].offset = zero;
+  Value sizeValue = builder.create<arith::ConstantIndexOp>(loc, size);
+  loopBounds[0].size = getValueOrCreateConstantIndexOp(builder, loc, sizeValue);
+  loopBounds[0].stride = one;
+
+  return loopBounds;
+}
+
+
+  SmallVector<utils::IteratorType> VecVecOp::getLoopIteratorTypes() {
+    return {utils::IteratorType::reduction};
+  }
+
+  FailureOr<TilingResult>
+  VecVecOp::getTiledImplementation(OpBuilder &builder,
+                                    ArrayRef<OpFoldResult> offsets,
+                                    ArrayRef<OpFoldResult> sizes) {
+    return emitOpError("Tiling not supported for VecVecOp");
+  }
+
+  LogicalResult VecVecOp::getResultTilePosition(
+      OpBuilder &builder, unsigned resultNumber, ArrayRef<OpFoldResult> offsets,
+      ArrayRef<OpFoldResult> sizes, SmallVector<OpFoldResult> &resultOffsets,
+      SmallVector<OpFoldResult> &resultSizes) {
+    return failure();
+  }
+  void VecVecOp::getEffects(
+    SmallVectorImpl<SideEffects::EffectInstance<MemoryEffects::Effect>> &effects) {
+  // برای ورودی‌ها: فقط خواندن
+  for (auto [index, operand] : llvm::enumerate(getDpsInputs())) {
+    if (!llvm::isa<MemRefType>(operand.getType()))
+      continue;
+    effects.emplace_back(MemoryEffects::Read::get(),
+                         &getOperation()->getOpOperand(index), /*stage=*/0,
+                         /*effectOnFullRegion=*/true,
+                         SideEffects::DefaultResource::get());
+  }
+
+  // برای خروجی‌ها: خواندن و نوشتن
+  for (OpOperand &operand : getDpsInitsMutable()) {
+    if (!llvm::isa<MemRefType>(operand.get().getType()))
+      continue;
+    effects.emplace_back(MemoryEffects::Read::get(), &operand, /*stage=*/0,
+                         /*effectOnFullRegion=*/true,
+                         SideEffects::DefaultResource::get());
+    effects.emplace_back(MemoryEffects::Write::get(), &operand, /*stage=*/0,
+                         /*effectOnFullRegion=*/true,
+                         SideEffects::DefaultResource::get());
   }
 }
+LogicalResult VecVecOp::reifyResultShapes(
+    OpBuilder &b, ReifiedRankedShapedTypeDims &reifiedReturnShapes) {
+  auto loc = getLoc();
+  auto outputType = getOutputOperandType();
+  SmallVector<OpFoldResult> shapes;
+
+  for (int64_t dim : llvm::seq<int64_t>(0, outputType.getRank())) {
+    if (!outputType.isDynamicDim(dim)) {
+      shapes.push_back(b.getIndexAttr(outputType.getDimSize(dim)));
+    } else {
+      OpFoldResult dimValue = createOrFoldDimOp(b, loc, getOutput(), dim);
+      shapes.push_back(getValueOrCreateConstantIndexOp(b, loc, dimValue));
+    }
+  }
+  reifiedReturnShapes.emplace_back(std::move(shapes));
+  return success();
+}
+LogicalResult VecVecOp::fold(FoldAdaptor adaptor,
+                             SmallVectorImpl<OpFoldResult> &results) {
+  return memref::foldMemRefCast(*this);
+}
+
 ```
 
-
-3. Register the Operation
-We registered the operation in the Linalg dialect by updating LinalgDialect.cpp:
-
-```cpp
-addOperations<
-    mlir::linalg::VecVecOp
->();
-```
 
 4. Compile the Code
    
@@ -164,9 +200,9 @@ task 5:
 
 To lower this code to LLVM IR, follow these steps:
 ```bash
-mlir-opt --lower-affine vecvec_example.mlir -o affine_lowered.mlir
+./bin/mlir-opt --lower-affine vecvec_example.mlir -o affine_lowered.mlir
 
-mlir-opt --convert-linalg-to-loops \
+./bin/mlir-opt --convert-linalg-to-loops \
          --convert-linalg-to-llvm \
          --convert-scf-to-cf \
          --convert-memref-to-llvm \

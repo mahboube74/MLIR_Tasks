@@ -139,7 +139,6 @@ LogicalResult VecVecOp::verify() {
   }
   void VecVecOp::getEffects(
     SmallVectorImpl<SideEffects::EffectInstance<MemoryEffects::Effect>> &effects) {
-  // برای ورودی‌ها: فقط خواندن
   for (auto [index, operand] : llvm::enumerate(getDpsInputs())) {
     if (!llvm::isa<MemRefType>(operand.getType()))
       continue;
@@ -149,7 +148,7 @@ LogicalResult VecVecOp::verify() {
                          SideEffects::DefaultResource::get());
   }
 
-  // برای خروجی‌ها: خواندن و نوشتن
+
   for (OpOperand &operand : getDpsInitsMutable()) {
     if (!llvm::isa<MemRefType>(operand.get().getType()))
       continue;

@@ -199,11 +199,14 @@ Here is the implementation:
 
 
 Second solution:
-
+The vecvec function computes the dot product of vectors %A and %B, storing the result in %C. It uses a reduction loop to multiply corresponding elements, sum them, and store the result.
+mlir-opt vecvec4.mlir 
 
 task 5: 
 
 To lower this code to LLVM IR, follow these steps:
+first solution:
+
 ```bash
 ./bin/mlir-opt --lower-affine vecvec_example.mlir -o affine_lowered.mlir
 
@@ -213,4 +216,16 @@ To lower this code to LLVM IR, follow these steps:
          --convert-memref-to-llvm \
          affine_lowered.mlir -o llvm_lowered.mlir
 
-mlir-translate --mlir-to-llvmir llvm_lowered.mlir -o vecvec.ll
+write vecvec.mlir and then run these commands
+
+
+```bash
+mlir-opt --convert-linalg-to-affine-loops vecvec.mlir -o vecvec_affine.mlir
+
+mlir-opt --lower-affine vecvec_affine.mlir -o vecvec_lowered_affine.mlir
+mlir-opt --convert-scf-to-cf vecvec_lowered_affine.mlir -o vecvec_lowered_scf.mlir
+mlir-opt --convert-func-to-llvm vecvec_lowered_scf.mlir -o vecvec_func_llvm.mlir
+mlir-opt --convert-memref-to-llvm vecvec_func_llvm.mlir -o vecvec_llvm_with_casts.mlir
+mlir-opt --reconcile-unrealized-casts vecvec_llvm_with_casts.mlir -o vecvec_llvm.mlir
+mlir-translate --mlir-to-llvmir vecvec_llvm.mlir -o vecvec.ll
+

@@ -205,7 +205,7 @@ mlir-opt vecvec4.mlir
 task 5: 
 
 To lower this code to LLVM IR, follow these steps:
-first solution:
+first solution: 
 
 ```bash
 ./bin/mlir-opt --lower-affine vecvec_example.mlir -o affine_lowered.mlir
@@ -216,10 +216,10 @@ first solution:
          --convert-memref-to-llvm \
          affine_lowered.mlir -o llvm_lowered.mlir
 
-write vecvec.mlir and then run these commands
 
 
-```bash
+
+
 mlir-opt --convert-linalg-to-affine-loops vecvec.mlir -o vecvec_affine.mlir
 
 mlir-opt --lower-affine vecvec_affine.mlir -o vecvec_lowered_affine.mlir

@@ -12,19 +12,23 @@ Lowering to Affine Dialect and Applying Loop-Unroll Transformation
 Use MLIR passes to lower Linalg operations to the Affine dialect. This converts the linalg.generic operation into nested affine loops. Apply the affine-loop-unroll pass to unroll loops for better performance.
 I run the following commands to lower and transform:
 
-    mlir-opt --linalg-bufferize gemm.mlir -o bufferized.mlir
-    mlir-opt --convert-linalg-to-loops bufferized.mlir -o loopified.mlir
-    mlir-opt --convert-linalg-to-affine-loops loopified.mlir -o affine_loops.mlir
+    mlir-opt --convert-linalg-to-affine-loops gemm.mlir -o gemm_affine.mlir
 
 Task 3:
 
 Generate LLVM IR (Convert the transformed Affine MLIR code to LLVM IR)
 To generate the LLVM IR from the transformed Affine dialect code, we need to lower the MLIR to LLVM IR.
 
-    mlir-opt affine_loops.mlir --convert-memref-to-llvm -o llvm.mlir
+    mlir-opt --lower-affine gemm_affine.mlir -o gemm_lowered_affine.mlir
+    mlir-opt --convert-scf-to-cf gemm_lowered_affine.mlir -o gemm_lowered_scf.mlir
+    mlir-opt --convert-func-to-llvm gemm_lowered_scf.mlir -o gemm_func_llvm.mlir
+    mlir-opt --convert-memref-to-llvm gemm_func_llvm.mlir -o gemm_llvm_with_casts.mlir
+    mlir-opt --reconcile-unrealized-casts gemm_llvm_with_casts.mlir -o gemm_llvm.mlir
+    mlir-translate --mlir-to-llvmir gemm_llvm.mlir -o gemm.ll
+
     
 Task 4:
-
+first solution: 
 In this task, we added a custom operation (linalg.vecvec) to the Linalg dialect in MLIR. This operation computes the dot product of two vectors and produces a scalar result. 
 
 1. Modify LinalgStructuredOps.td
@@ -193,6 +197,8 @@ Here is the implementation:
     cmake -G Ninja .. -DLLVM_ENABLE_PROJECTS=mlir
     ninja
 
+
+Second solution:
 
 
 task 5: 

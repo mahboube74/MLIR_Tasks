@@ -26,8 +26,11 @@ To generate the LLVM IR from the transformed Affine dialect code, we need to low
     mlir-opt --reconcile-unrealized-casts gemm_llvm_with_casts.mlir -o gemm_llvm.mlir
     mlir-translate --mlir-to-llvmir gemm_llvm.mlir -o gemm.ll
 
-    
+
+you can see the output files in matmul directory. 
+
 Task 4:
+
 first solution: 
 In this task, we added a custom operation (linalg.vecvec) to the Linalg dialect in MLIR. This operation computes the dot product of two vectors and produces a scalar result. 
 
@@ -199,13 +202,15 @@ Here is the implementation:
 
 
 Second solution:
+
 The vecvec function computes the dot product of vectors %A and %B, storing the result in %C. It uses a reduction loop to multiply corresponding elements, sum them, and store the result.
 mlir-opt vecvec4.mlir 
 
 task 5: 
 
 To lower this code to LLVM IR, follow these steps:
-first solution: 
+
+first solution: (You can see the output files in vecvec directory) 
 
 ```bash
 ./bin/mlir-opt --lower-affine vecvec_example.mlir -o affine_lowered.mlir

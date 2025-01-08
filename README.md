@@ -216,8 +216,7 @@ first solution:
          --convert-memref-to-llvm \
          affine_lowered.mlir -o llvm_lowered.mlir
 
-
-
+write vecvec.mlir and then run these commands
 
 
 mlir-opt --convert-linalg-to-affine-loops vecvec.mlir -o vecvec_affine.mlir
